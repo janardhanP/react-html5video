@@ -6,7 +6,7 @@ module.exports = {
         // CSS Must be first or the Video component will not be
         // exported.
         './src/assets/video.css',
-        './src/components/video/video.js'
+        './src/components/video/Video.js'
     ],
     target: 'web',
     externals: [{

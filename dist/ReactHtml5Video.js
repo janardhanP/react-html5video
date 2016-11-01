@@ -257,17 +257,33 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    /**
 	     * Sets the video to fullscreen.
+	     * toggle the video to fullscreen and window.
 	     * @return {undefined}
 	     */
-	    fullscreen: function fullscreen() {
-	        if (this.videoEl.requestFullscreen) {
-	            this.videoEl.requestFullscreen();
-	        } else if (this.videoEl.msRequestFullscreen) {
-	            this.videoEl.msRequestFullscreen();
-	        } else if (this.videoEl.mozRequestFullScreen) {
-	            this.videoEl.mozRequestFullScreen();
-	        } else if (this.videoEl.webkitRequestFullscreen) {
-	            this.videoEl.webkitRequestFullscreen();
+	    toggleFullscreen: function toggleFullscreen() {
+	        var ce = this.videoContainer;
+	        if (!document.fullscreenElement && // alternative standard method
+	        !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+	            // current working methods
+	            if (ce.requestFullscreen) {
+	                ce.requestFullscreen();
+	            } else if (ce.msRequestFullscreen) {
+	                ce.msRequestFullscreen();
+	            } else if (ce.mozRequestFullScreen) {
+	                ce.mozRequestFullScreen();
+	            } else if (ce.webkitRequestFullscreen) {
+	                ce.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+	            }
+	        } else {
+	            if (document.exitFullscreen) {
+	                document.exitFullscreen();
+	            } else if (document.msExitFullscreen) {
+	                document.msExitFullscreen();
+	            } else if (document.mozCancelFullScreen) {
+	                document.mozCancelFullScreen();
+	            } else if (document.webkitExitFullscreen) {
+	                document.webkitExitFullscreen();
+	            }
 	        }
 	    },
 
@@ -307,7 +323,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Seeks the video timeline.
 	     * @param  {number} time The value in seconds to seek to
 	     * @param  {bool}   forceUpdate Forces a state update without waiting for
-	     *                              throttled event.          
+	     *                              throttled event.
 	     * @return {undefined}
 	     */
 	    seek: function seek(time, forceUpdate) {
@@ -325,7 +341,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Sets the video volume.
 	     * @param  {number} volume The volume level between 0 and 1.
 	     * @param  {bool}   forceUpdate Forces a state update without waiting for
-	     *                              throttled event.  
+	     *                              throttled event.
 	     * @return {undefined}
 	     */
 	    setVolume: function setVolume(volume, forceUpdate) {
@@ -380,7 +396,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            mute: this.mute,
 	            unmute: this.unmute,
 	            seek: this.seek,
-	            fullscreen: this.fullscreen,
+	            toggleFullscreen: this.toggleFullscreen,
 	            setVolume: this.setVolume
 	        }, this.state, { copyKeys: this.props.copyKeys });
 
@@ -474,15 +490,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var _props = this.props;
 	        var controls = _props.controls;
 	        var copyKeys = _props.copyKeys;
+	        var style = _props.style;
 
-	        var otherProps = _objectWithoutProperties(_props, ['controls', 'copyKeys']);
+	        var otherProps = _objectWithoutProperties(_props, ['controls', 'copyKeys', 'style']);
 
 	        return _react2['default'].createElement(
 	            'div',
 	            { className: this.getVideoClassName(),
 	                tabIndex: '0',
+	                ref: function (vc) {
+	                    _this2.videoContainer = vc;
+	                },
 	                onFocus: this.onFocus,
-	                onBlur: this.onBlur },
+	                onBlur: this.onBlur,
+	                style: style },
 	            _react2['default'].createElement(
 	                'video',
 	                _extends({}, otherProps, {
@@ -1818,7 +1839,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    propTypes: {
 	        copyKeys: _react2['default'].PropTypes.object,
-	        fullscreen: _react2['default'].PropTypes.func
+	        toggleFullscreen: _react2['default'].PropTypes.func
 	    },
 
 	    /**
@@ -1828,14 +1849,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @return {boolean}          Whether we re-render or not
 	     */
 	    shouldComponentUpdate: function shouldComponentUpdate(nextProps) {
-	        return this.props.fullscreen !== nextProps.fullscreen;
+	        return this.props.toggleFullscreen !== nextProps.toggleFullscreen;
 	    },
 
 	    render: function render() {
 	        return _react2['default'].createElement(
 	            'button',
 	            {
-	                onClick: this.props.fullscreen,
+	                onClick: this.props.toggleFullscreen,
 	                className: 'video-fullscreen video__control',
 	                'aria-label': this.props.copyKeys.fullscreen },
 	            _react2['default'].createElement(_iconIcon2['default'], { name: 'resize-full' })

@@ -1,4 +1,3 @@
 {
     "parser": "babel-eslint",
-    "extends": "./node_modules/coding-standards/.eslintrc-node"
 }

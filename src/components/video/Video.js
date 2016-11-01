@@ -301,7 +301,8 @@ var Video = React.createClass({
         if (!controls.length) {
             controls = (
                 <div>
-                    <Overlay {...extendedProps} />
+                    <Overlay {...extendedProps}
+                      onDoubleClick={this.toggleFullscreen}/>
                     <Controls {...extendedProps} />
                 </div>
             );
@@ -382,7 +383,6 @@ var Video = React.createClass({
                 ref={(vc) => {
                     this.videoContainer = vc;
                 }}
-                onDoubleClick={this.toggleFullscreen}
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
                 style={style}>

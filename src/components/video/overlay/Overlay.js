@@ -7,6 +7,7 @@ var Overlay = React.createClass({
     propTypes: {
         error: React.PropTypes.bool,
         togglePlay: React.PropTypes.func,
+        onDoubleClick: React.PropTypes.func,
         paused: React.PropTypes.bool,
         copyKeys: React.PropTypes.object,
         loading: React.PropTypes.bool
@@ -28,7 +29,10 @@ var Overlay = React.createClass({
             );
         } else {
             content = (
-                <div className="video-overlay__play" onClick={this.props.togglePlay}>
+                <div className="video-overlay__play"
+                  onClick={this.props.togglePlay}
+                  onDoubleClick={this.props.onDoubleClick}
+                  >
                     {this.props.paused ? <Icon name="play-1" /> : ''}
                 </div>
             );

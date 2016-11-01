@@ -115,6 +115,12 @@ var Video = React.createClass({
         this._updateStateFromVideo.cancel();
     },
 
+    onDoubleClick (e) {
+      e.preventDefault()
+      e.stopPropagation()
+      this.toggleFullscreen()
+    },
+
     /**
      * Toggles the video to play and pause.
      * @return {undefined}
@@ -288,7 +294,8 @@ var Video = React.createClass({
             unmute: this.unmute,
             seek: this.seek,
             toggleFullscreen: this.toggleFullscreen,
-            setVolume: this.setVolume
+            setVolume: this.setVolume,
+            onDoubleClick:this.onDoubleClick
         }, this.state, {copyKeys: this.props.copyKeys});
 
         var controls = React.Children.map(this.props.children, (child) => {
@@ -301,8 +308,7 @@ var Video = React.createClass({
         if (!controls.length) {
             controls = (
                 <div>
-                    <Overlay {...extendedProps}
-                      onDoubleClick={this.toggleFullscreen}/>
+                    <Overlay {...extendedProps} />
                     <Controls {...extendedProps} />
                 </div>
             );

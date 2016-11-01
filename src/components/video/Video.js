@@ -152,14 +152,14 @@ var Video = React.createClass({
      * @return {undefined}
      */
     fullscreen() {
-        if (this.videoEl.requestFullscreen) {
-            this.videoEl.requestFullscreen();
-        } else if (this.videoEl.msRequestFullscreen) {
-            this.videoEl.msRequestFullscreen();
-        } else if (this.videoEl.mozRequestFullScreen) {
-            this.videoEl.mozRequestFullScreen();
-        } else if (this.videoEl.webkitRequestFullscreen) {
-            this.videoEl.webkitRequestFullscreen();
+        if (this.videoContainer.requestFullscreen) {
+            this.videoContainer.requestFullscreen();
+        } else if (this.videoContainer.msRequestFullscreen) {
+            this.videoContainer.msRequestFullscreen();
+        } else if (this.videoContainer.mozRequestFullScreen) {
+            this.videoContainer.mozRequestFullScreen();
+        } else if (this.videoContainer.webkitRequestFullscreen) {
+            this.videoContainer.webkitRequestFullscreen();
         }
     },
 
@@ -199,7 +199,7 @@ var Video = React.createClass({
      * Seeks the video timeline.
      * @param  {number} time The value in seconds to seek to
      * @param  {bool}   forceUpdate Forces a state update without waiting for
-     *                              throttled event.          
+     *                              throttled event.
      * @return {undefined}
      */
     seek(time, forceUpdate) {
@@ -217,7 +217,7 @@ var Video = React.createClass({
      * Sets the video volume.
      * @param  {number} volume The volume level between 0 and 1.
      * @param  {bool}   forceUpdate Forces a state update without waiting for
-     *                              throttled event.  
+     *                              throttled event.
      * @return {undefined}
      */
     setVolume(volume, forceUpdate) {
@@ -364,6 +364,9 @@ var Video = React.createClass({
         return (
             <div className={this.getVideoClassName()}
                 tabIndex="0"
+                ref={(vc) => {
+                    this.videoContainer = vc;
+                }}
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
                 style={style}>

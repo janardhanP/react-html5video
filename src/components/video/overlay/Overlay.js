@@ -31,7 +31,6 @@ var Overlay = React.createClass({
             content = (
                 <div className="video-overlay__play"
                   onClick={this.props.togglePlay}
-                  onDoubleClick={this.props.onDoubleClick}
                   >
                     {this.props.paused ? <Icon name="play-1" /> : ''}
                 </div>
@@ -42,7 +41,9 @@ var Overlay = React.createClass({
 
     render() {
         return (
-            <div className="video-overlay">
+            <div className="video-overlay"
+              onDoubleClick={this.props.onDoubleClick}
+              >
                 {this.renderContent()}
             </div>
         );

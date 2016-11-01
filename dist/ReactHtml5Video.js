@@ -1175,8 +1175,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            content = _react2['default'].createElement(
 	                'div',
 	                { className: 'video-overlay__play',
-	                    onClick: this.props.togglePlay,
-	                    onDoubleClick: this.props.onDoubleClick
+	                    onClick: this.props.togglePlay
 	                },
 	                this.props.paused ? _react2['default'].createElement(_iconIcon2['default'], { name: 'play-1' }) : ''
 	            );
@@ -1187,7 +1186,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    render: function render() {
 	        return _react2['default'].createElement(
 	            'div',
-	            { className: 'video-overlay' },
+	            { className: 'video-overlay',
+	                onDoubleClick: this.props.onDoubleClick
+	            },
 	            this.renderContent()
 	        );
 	    }

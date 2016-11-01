@@ -149,18 +149,33 @@ var Video = React.createClass({
 
     /**
      * Sets the video to fullscreen.
+     * toggle the video to fullscreen and window.
      * @return {undefined}
      */
-    fullscreen() {
-        if (this.videoContainer.requestFullscreen) {
-            this.videoContainer.requestFullscreen();
-        } else if (this.videoContainer.msRequestFullscreen) {
-            this.videoContainer.msRequestFullscreen();
-        } else if (this.videoContainer.mozRequestFullScreen) {
-            this.videoContainer.mozRequestFullScreen();
-        } else if (this.videoContainer.webkitRequestFullscreen) {
-            this.videoContainer.webkitRequestFullscreen();
-        }
+     toggleFullscreen() {
+      const ce = this.videoContainer;
+      if (!document.fullscreenElement &&    // alternative standard method
+          !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
+          if (ce.requestFullscreen) {
+              ce.requestFullscreen();
+          } else if (ce.msRequestFullscreen) {
+              ce.msRequestFullscreen();
+          } else if (ce.mozRequestFullScreen) {
+              ce.mozRequestFullScreen();
+          } else if (ce.webkitRequestFullscreen) {
+              ce.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+          }
+      } else {
+          if (document.exitFullscreen) {
+              document.exitFullscreen();
+          } else if (document.msExitFullscreen) {
+              document.msExitFullscreen();
+          } else if (document.mozCancelFullScreen) {
+              document.mozCancelFullScreen();
+          } else if (document.webkitExitFullscreen) {
+              document.webkitExitFullscreen();
+          }
+      }
     },
 
     /**
@@ -272,7 +287,7 @@ var Video = React.createClass({
             mute: this.mute,
             unmute: this.unmute,
             seek: this.seek,
-            fullscreen: this.fullscreen,
+            toggleFullscreen: this.toggleFullscreen,
             setVolume: this.setVolume
         }, this.state, {copyKeys: this.props.copyKeys});
 

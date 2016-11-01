@@ -382,6 +382,7 @@ var Video = React.createClass({
                 ref={(vc) => {
                     this.videoContainer = vc;
                 }}
+                onDoubleClick={this.toggleFullscreen}
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
                 style={style}>

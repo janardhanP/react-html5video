@@ -501,6 +501,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                ref: function (vc) {
 	                    _this2.videoContainer = vc;
 	                },
+	                onDoubleClick: this.toggleFullscreen,
 	                onFocus: this.onFocus,
 	                onBlur: this.onBlur,
 	                style: style },

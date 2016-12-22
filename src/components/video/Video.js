@@ -45,7 +45,7 @@ var Video = React.createClass({
         className: React.PropTypes.string,
 
         // HTML5 Video standard attributes
-        src: React.PropTypes.string.isRequired,
+        url: React.PropTypes.string.isRequired,
         autoPlay: React.PropTypes.bool,
         muted: React.PropTypes.bool,
         controls: React.PropTypes.bool
@@ -99,7 +99,7 @@ var Video = React.createClass({
      */
     componentDidMount() {
         // Listen to error of last source.
-        const url = this.props.src;
+        const url = this.props.url;
         const player = MediaPlayer().create();
         player.initialize(this.videoEl, url, true);
         this.videoEl.children[this.videoEl.children.length - 1]

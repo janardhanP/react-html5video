@@ -101,7 +101,7 @@ var Video = React.createClass({
         // Listen to error of last source.
         const url = this.props.src;
         const player = MediaPlayer().create();
-        player.initialize(this.video, url, true);
+        player.initialize(this.videoEl, url, true);
         this.videoEl.children[this.videoEl.children.length - 1]
             .addEventListener('error', this._updateStateFromVideo);
     },

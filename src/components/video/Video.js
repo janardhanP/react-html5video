@@ -8,6 +8,7 @@ import Fullscreen from './../controls/fullscreen/Fullscreen';
 import Time from './../controls/time/Time';
 import throttle from 'lodash.throttle';
 import copy from './../../assets/copy';
+import {MediaPlayer} from 'dashjs';
 
 var EVENTS = [
     'onAbort',
@@ -44,6 +45,7 @@ var Video = React.createClass({
         className: React.PropTypes.string,
 
         // HTML5 Video standard attributes
+        src: React.propTypes.string.isRequired,
         autoPlay: React.PropTypes.bool,
         muted: React.PropTypes.bool,
         controls: React.PropTypes.bool
@@ -97,6 +99,9 @@ var Video = React.createClass({
      */
     componentDidMount() {
         // Listen to error of last source.
+        const url = this.props.src;
+        const player = MediaPlayer().create();
+        player.initialize(this.video, url, true);
         this.videoEl.children[this.videoEl.children.length - 1]
             .addEventListener('error', this._updateStateFromVideo);
     },

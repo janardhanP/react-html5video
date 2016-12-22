@@ -22,6 +22,7 @@
   "license": "MIT",
   "dependencies": {
     "css-loader": "^0.21.0",
+    "dashjs": "^2.4.0",
     "extract-text-webpack-plugin": "^0.8.2",
     "lodash.throttle": "^3.0.4",
     "style-loader": "^0.13.1"

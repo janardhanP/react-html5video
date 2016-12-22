@@ -45,7 +45,7 @@ var Video = React.createClass({
         className: React.PropTypes.string,
 
         // HTML5 Video standard attributes
-        src: React.propTypes.string.isRequired,
+        src: React.PropTypes.string.isRequired,
         autoPlay: React.PropTypes.bool,
         muted: React.PropTypes.bool,
         controls: React.PropTypes.bool

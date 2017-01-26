@@ -47,6 +47,18 @@ var Mute = React.createClass({
         }
     },
 
+    renderVolumeIcon(volume,isMuted){
+        if(volume <= 0 || isMuted) {
+            return <Icon name="volume-off"/>
+        } else if(volume > 0 && volume < 50){
+            return <Icon name="volume-down"/>             
+        } else if(volume >=50 && volume < 90){
+            return <Icon name="volume-up"/>
+        } else{
+            return <Icon name="volume-up"/>
+        }
+    }
+
     render() {
         return (
             <div className="video-mute video__control" >
@@ -55,9 +67,7 @@ var Mute = React.createClass({
                     onClick={this.toggleMute}
                     aria-label={this.props.muted || this.props.volume <= 0
                         ? this.props.copyKeys.unmute : this.props.copyKeys.mute}>
-                    {this.props.muted || this.props.volume <= 0
-                        ? <Icon name="volume-off" />
-                        : <Icon name="volume-up" />}
+                    {this.renderVolumeIcon(this.props.volume,this.props.muted)}
                 </button>
                 <div className="video-mute__volume">
                     <div className="video-mute__track">

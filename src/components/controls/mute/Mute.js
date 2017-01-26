@@ -50,10 +50,8 @@ var Mute = React.createClass({
     renderVolumeIcon(volume,isMuted){
         if(volume <= 0 || isMuted) {
             return <Icon name="volume-off"/>
-        } else if(volume > 0 && volume < 50){
+        } else if(volume > 0 && volume <= 0.50){
             return <Icon name="volume-down"/>             
-        } else if(volume >=50 && volume < 90){
-            return <Icon name="volume-up"/>
         } else{
             return <Icon name="volume-up"/>
         }

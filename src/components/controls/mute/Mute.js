@@ -57,7 +57,7 @@ var Mute = React.createClass({
         } else{
             return <Icon name="volume-up"/>
         }
-    }
+    },
 
     render() {
         return (

@@ -318,7 +318,7 @@ var Video = React.createClass({
         }, this.state, {copyKeys: this.props.copyKeys});
 
         var controls = React.Children.map(this.props.children, (child) => {
-            if (child.type === 'source') {
+            if (child.type === 'source' || child.type==='track') {
                 return void 0;
             }
             return React.cloneElement(child, extendedProps);
@@ -341,7 +341,7 @@ var Video = React.createClass({
      */
     renderSources() {
         return React.Children.map(this.props.children, (child) => {
-            if (child.type !== 'source') {
+            if (child.type !== 'source' && child.type !== 'track') {
                 return void 0;
             }
             return child;

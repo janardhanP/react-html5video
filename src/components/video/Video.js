@@ -67,6 +67,7 @@ var Video = React.createClass({
             paused: !this.props.autoPlay,
             muted: !!this.props.muted,
             volume: 1,
+            playbackRate: 1,
             error: false,
             loading: false
         };
@@ -258,6 +259,16 @@ var Video = React.createClass({
     },
 
     /**
+     * Sets the video playback rate.
+     * @param  {number} rate The playback rate (default 1.0).
+     * @return {undefined}
+     */
+    setPlaybackRate(rate) {
+        this.videoEl.playbackRate = rate;
+        this.updateStateFromVideo();
+    },
+
+    /**
      * Updates the React component state from the DOM video properties.
      * This is where the magic happens.
      * @return {undefined}
@@ -271,6 +282,7 @@ var Video = React.createClass({
             paused: this.videoEl.paused,
             muted: this.videoEl.muted,
             volume: this.videoEl.volume,
+            playbackRate: this.videoEl.playbackRate,
             readyState: this.videoEl.readyState,
 
             // Non-standard state computed from properties
@@ -300,7 +312,9 @@ var Video = React.createClass({
             seek: this.seek,
             toggleFullscreen: this.toggleFullscreen,
             setVolume: this.setVolume,
-            onDoubleClick:this.onDoubleClick
+            onDoubleClick:this.onDoubleClick,
+            fullscreen: this.fullscreen,
+            setPlaybackRate: this.setPlaybackRate,
         }, this.state, {copyKeys: this.props.copyKeys});
 
         var controls = React.Children.map(this.props.children, (child) => {

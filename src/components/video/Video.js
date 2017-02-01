@@ -6,9 +6,10 @@ import Play from './../controls/play/Play';
 import Mute from './../controls/mute/Mute';
 import Fullscreen from './../controls/fullscreen/Fullscreen';
 import Time from './../controls/time/Time';
+import HD from './../controls/hd/HD';
 import throttle from 'lodash.throttle';
 import copy from './../../assets/copy';
-import {MediaPlayer} from 'dashjs';
+import { MediaPlayer } from 'dashjs';
 
 var EVENTS = [
     'onAbort',
@@ -69,7 +70,9 @@ var Video = React.createClass({
             volume: 1,
             playbackRate: 1,
             error: false,
-            loading: false
+            loading: false,
+            bitrateOptionsAudio: [],
+            bitrateOptionsVideo: []
         };
     },
 
@@ -99,12 +102,20 @@ var Video = React.createClass({
      * @return {undefined}
      */
     componentDidMount() {
-        // Listen to error of last source.
         const url = this.props.url;
         this.player = MediaPlayer().create();
         this.player.initialize(this.videoEl, url, true);
         this.videoEl.children[this.videoEl.children.length - 1]
             .addEventListener('error', this._updateStateFromVideo);
+        this.player.on(MediaPlayer.events.STREAM_INITIALIZED, () => {
+          let bitrateOptionsVideo = this.player.getBitrateInfoListFor('video')
+          let bitrateOptionsAudio = this.player.getBitrateInfoListFor('audio')
+          console.log('bitrateOptionsVideo',bitrateOptionsVideo,bitrateOptionsAudio)
+          this.setState({
+            bitrateOptionsAudio,
+            bitrateOptionsVideo 
+          })
+        })
     },
 
     getMediaPlayerInstance(){
@@ -319,6 +330,9 @@ var Video = React.createClass({
             onDoubleClick:this.onDoubleClick,
             fullscreen: this.fullscreen,
             setPlaybackRate: this.setPlaybackRate,
+            bitrateOptionsAudio: this.state.bitrateOptionsAudio,
+            bitrateOptionsVideo: this.state.bitrateOptionsVideo,
+            handleQualityChange: this.handleQualityChange
         }, this.state, {copyKeys: this.props.copyKeys});
 
         var controls = React.Children.map(this.props.children, (child) => {
@@ -337,6 +351,15 @@ var Video = React.createClass({
             );
         }
         return controls;
+    },
+
+    handleQualityChange(type,index) {
+      if(index === -1){
+        this.player.setAutoSwitchQuality(true)
+      } else {      
+        this.player.setAutoSwitchQuality(false)
+        this.player.setQualityFor(type,index)
+      }
     },
 
     /**
@@ -433,4 +456,4 @@ var Video = React.createClass({
     }
 });
 
-export {Video as default, Controls, Seek, Play, Mute, Fullscreen, Time, Overlay};
+export {Video as default, Controls, Seek, Play, Mute, Fullscreen, Time, Overlay,HD};

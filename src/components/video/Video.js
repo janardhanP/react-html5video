@@ -7,6 +7,7 @@ import Mute from './../controls/mute/Mute';
 import Fullscreen from './../controls/fullscreen/Fullscreen';
 import Time from './../controls/time/Time';
 import HD from './../controls/hd/HD';
+import Subtitle from './../controls/subtitles/Subtitles';
 import throttle from 'lodash.throttle';
 import copy from './../../assets/copy';
 import { MediaPlayer } from 'dashjs';
@@ -72,7 +73,10 @@ var Video = React.createClass({
             error: false,
             loading: false,
             bitrateOptionsAudio: [],
-            bitrateOptionsVideo: []
+            bitrateOptionsVideo: [],
+            subtitleTracks: [],
+            currentTextTrackIndex: -1,
+            initialBitrateForVideo: -1
         };
     },
 
@@ -107,14 +111,21 @@ var Video = React.createClass({
         this.player.initialize(this.videoEl, url, true);
         this.videoEl.children[this.videoEl.children.length - 1]
             .addEventListener('error', this._updateStateFromVideo);
-        this.player.on(MediaPlayer.events.STREAM_INITIALIZED, () => {
-          let bitrateOptionsVideo = this.player.getBitrateInfoListFor('video')
-          let bitrateOptionsAudio = this.player.getBitrateInfoListFor('audio')
-          console.log('bitrateOptionsVideo',bitrateOptionsVideo,bitrateOptionsAudio)
-          this.setState({
-            bitrateOptionsAudio,
-            bitrateOptionsVideo 
-          })
+        this.player.on(MediaPlayer.events.STREAM_INITIALIZED, this.getDefaultConditionsFromPlayer)
+    },
+
+    getDefaultConditionsFromPlayer(){
+        let bitrateOptionsVideo = this.player.getBitrateInfoListFor('video')
+        let bitrateOptionsAudio = this.player.getBitrateInfoListFor('audio')
+        let subtitleTracks = this.player.getTracksFor('fragmentedText') 
+        let currentTextTrackIndex = this.player.getCurrentTrackFor('fragmentedText')
+        let initialBitrateForVideo = this.player.getInitialBitrateFor('video')
+        this.setState({
+          bitrateOptionsAudio,
+          bitrateOptionsVideo,
+          subtitleTracks, 
+          currentTextTrackIndex,
+          initialBitrateForVideo
         })
     },
 
@@ -332,7 +343,11 @@ var Video = React.createClass({
             setPlaybackRate: this.setPlaybackRate,
             bitrateOptionsAudio: this.state.bitrateOptionsAudio,
             bitrateOptionsVideo: this.state.bitrateOptionsVideo,
-            handleQualityChange: this.handleQualityChange
+            handleQualityChange: this.handleQualityChange,
+            subtitleTracks: this.state.subtitleTracks,
+            handleTrackChange: this.handleTrackChange,
+            initialBitrateForVideo: this.state.initialBitrateForVideo,
+            currentTextTrackIndex: this.state.currentTextTrackIndex
         }, this.state, {copyKeys: this.props.copyKeys});
 
         var controls = React.Children.map(this.props.children, (child) => {
@@ -353,13 +368,28 @@ var Video = React.createClass({
         return controls;
     },
 
+    /**
+     * Sets player current quality index 
+     * @return {undefined}
+     */
     handleQualityChange(type,index) {
       if(index === -1){
         this.player.setAutoSwitchQuality(true)
       } else {      
         this.player.setAutoSwitchQuality(false)
         this.player.setQualityFor(type,index)
+        this.setState({
+          initialBitrateForVideo: this.state.bitrateOptionsVideo[index].bitrate
+        })
       }
+    },
+
+    /**
+     * Sets player current text track 
+     * @return {undefined}
+     */
+    handleTrackChange(index){
+      this.player.setTextTrack(index)
     },
 
     /**
@@ -456,4 +486,4 @@ var Video = React.createClass({
     }
 });
 
-export {Video as default, Controls, Seek, Play, Mute, Fullscreen, Time, Overlay,HD};
+export {Video as default, Controls, Seek, Play, Mute, Fullscreen, Time, Overlay,HD,Subtitle};

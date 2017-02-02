@@ -32,7 +32,7 @@ var QualityControls = React.createClass({
     renderQualityControls(qualityOptions,selectedQuality){
         return qualityOptions.map((item,index) => {
            return <VideoSelectItem
-                    isActive={item.value===selectedQuality}
+                    isActive={item.bitrate===selectedQuality}
                     key={index}
                     onClickHandle={this.onQualityChange}
                     {...item}/>
@@ -70,7 +70,7 @@ var QualityControls = React.createClass({
                   <i className="fa fa-cog" aria-hidden="true"></i>
               </button>
               <div className="video-settings__content">
-                {this.renderQualityControls(qualityOptions,this.props.selectedQuality)}
+                {this.renderQualityControls(qualityOptions,this.props.initialBitrateForVideo)}
               </div>
           </div>
         )

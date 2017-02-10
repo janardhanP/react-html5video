@@ -1,4 +1,4 @@
-# react-html5video
+# react-video
 
 A customizeable HTML5 Video that uses the familiar HTML5 video markup but with custom and configurable controls with i18n and a11y.
 
@@ -11,7 +11,7 @@ View the [demo](http://mderrick.github.io/react-html5video/).
 
 ## Install
 
-`npm install react-html5video --save` or `bower install react-html5video --save`
+`npm install react-video --save` or `bower install react-video --save`
 
 Include `dist/ReactHtml5Video.css` if you do not want to build your own CSS. Alternatively require `src/assets/video.css` if you want to compile the CSS yourself with [css-loaders](https://github.com/webpack/css-loader) and [url-loaders](https://github.com/webpack/url-loader) etc. See the demo [Webpack config](https://github.com/mderrick/react-html5video/blob/master/demo/webpack.config.js) as an example.
 
@@ -48,7 +48,7 @@ import { default as Video, Controls, Play, Mute, Seek, Fullscreen, Time, Overlay
 Use normal HTML5 `<video>` markup with all the standard [html attributes](https://developer.mozilla.org/en/docs/Web/HTML/Element/video) and supported [React media events](https://facebook.github.io/react/docs/events.html#media-events):
 
 ```js
-import Video from 'react-html5video';
+import Video from 'react-video';
 render() {
     return (
         <Video controls autoPlay loop muted

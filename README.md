@@ -1,4 +1,4 @@
-# react-html5video
+# react-video
 
 A customizeable HTML5 Video that uses the familiar HTML5 video markup but with custom and configurable controls with i18n and a11y.
 

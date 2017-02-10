@@ -6,9 +6,11 @@ import Play from './../controls/play/Play';
 import Mute from './../controls/mute/Mute';
 import Fullscreen from './../controls/fullscreen/Fullscreen';
 import Time from './../controls/time/Time';
+import HD from './../controls/hd/HD';
+import Subtitle from './../controls/subtitles/Subtitles';
 import throttle from 'lodash.throttle';
 import copy from './../../assets/copy';
-import {MediaPlayer} from 'dashjs';
+import { MediaPlayer } from 'dashjs';
 
 var EVENTS = [
     'onAbort',
@@ -67,8 +69,14 @@ var Video = React.createClass({
             paused: !this.props.autoPlay,
             muted: !!this.props.muted,
             volume: 1,
+            playbackRate: 1,
             error: false,
-            loading: false
+            loading: false,
+            bitrateOptionsAudio: [],
+            bitrateOptionsVideo: [],
+            subtitleTracks: [],
+            currentTextTrackIndex: -1,
+            initialBitrateForVideo: -1
         };
     },
 
@@ -98,12 +106,31 @@ var Video = React.createClass({
      * @return {undefined}
      */
     componentDidMount() {
-        // Listen to error of last source.
         const url = this.props.url;
-        const player = MediaPlayer().create();
-        player.initialize(this.videoEl, url, true);
+        this.player = MediaPlayer().create();
+        this.player.initialize(this.videoEl, url, true);
         this.videoEl.children[this.videoEl.children.length - 1]
             .addEventListener('error', this._updateStateFromVideo);
+        this.player.on(MediaPlayer.events.STREAM_INITIALIZED, this.getDefaultConditionsFromPlayer)
+    },
+
+    getDefaultConditionsFromPlayer(){
+        let bitrateOptionsVideo = this.player.getBitrateInfoListFor('video')
+        let bitrateOptionsAudio = this.player.getBitrateInfoListFor('audio')
+        let subtitleTracks = this.player.getTracksFor('fragmentedText') 
+        let currentTextTrackIndex = this.player.getCurrentTrackFor('fragmentedText')
+        let initialBitrateForVideo = this.player.getInitialBitrateFor('video')
+        this.setState({
+          bitrateOptionsAudio,
+          bitrateOptionsVideo,
+          subtitleTracks, 
+          currentTextTrackIndex,
+          initialBitrateForVideo
+        })
+    },
+
+    getMediaPlayerInstance(){
+        return this.player
     },
 
     /**
@@ -258,6 +285,16 @@ var Video = React.createClass({
     },
 
     /**
+     * Sets the video playback rate.
+     * @param  {number} rate The playback rate (default 1.0).
+     * @return {undefined}
+     */
+    setPlaybackRate(rate) {
+        this.videoEl.playbackRate = rate;
+        this.updateStateFromVideo();
+    },
+
+    /**
      * Updates the React component state from the DOM video properties.
      * This is where the magic happens.
      * @return {undefined}
@@ -271,6 +308,7 @@ var Video = React.createClass({
             paused: this.videoEl.paused,
             muted: this.videoEl.muted,
             volume: this.videoEl.volume,
+            playbackRate: this.videoEl.playbackRate,
             readyState: this.videoEl.readyState,
 
             // Non-standard state computed from properties
@@ -300,11 +338,20 @@ var Video = React.createClass({
             seek: this.seek,
             toggleFullscreen: this.toggleFullscreen,
             setVolume: this.setVolume,
-            onDoubleClick:this.onDoubleClick
+            onDoubleClick:this.onDoubleClick,
+            fullscreen: this.fullscreen,
+            setPlaybackRate: this.setPlaybackRate,
+            bitrateOptionsAudio: this.state.bitrateOptionsAudio,
+            bitrateOptionsVideo: this.state.bitrateOptionsVideo,
+            handleQualityChange: this.handleQualityChange,
+            subtitleTracks: this.state.subtitleTracks,
+            handleTrackChange: this.handleTrackChange,
+            initialBitrateForVideo: this.state.initialBitrateForVideo,
+            currentTextTrackIndex: this.state.currentTextTrackIndex
         }, this.state, {copyKeys: this.props.copyKeys});
 
         var controls = React.Children.map(this.props.children, (child) => {
-            if (child.type === 'source') {
+            if (child.type === 'source' || child.type==='track') {
                 return void 0;
             }
             return React.cloneElement(child, extendedProps);
@@ -322,12 +369,36 @@ var Video = React.createClass({
     },
 
     /**
+     * Sets player current quality index 
+     * @return {undefined}
+     */
+    handleQualityChange(type,index) {
+      if(index === -1){
+        this.player.setAutoSwitchQuality(true)
+      } else {      
+        this.player.setAutoSwitchQuality(false)
+        this.player.setQualityFor(type,index)
+        this.setState({
+          initialBitrateForVideo: this.state.bitrateOptionsVideo[index].bitrate
+        })
+      }
+    },
+
+    /**
+     * Sets player current text track 
+     * @return {undefined}
+     */
+    handleTrackChange(index){
+      this.player.setTextTrack(index)
+    },
+
+    /**
      * Returns video 'source' nodes from children.
      * @return {Array.<ReactElement>} An array of components.
      */
     renderSources() {
         return React.Children.map(this.props.children, (child) => {
-            if (child.type !== 'source') {
+            if (child.type !== 'source' && child.type !== 'track') {
                 return void 0;
             }
             return child;
@@ -415,4 +486,4 @@ var Video = React.createClass({
     }
 });
 
-export {Video as default, Controls, Seek, Play, Mute, Fullscreen, Time, Overlay};
+export {Video as default, Controls, Seek, Play, Mute, Fullscreen, Time, Overlay,HD,Subtitle};

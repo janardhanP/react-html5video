@@ -1,6 +1,6 @@
 {
-  "name": "react-html5video",
-  "version": "1.4.0",
+  "name": "react-video",
+  "version": "0.0.1",
   "description": "",
   "main": "./dist/ReactHtml5Video.js",
   "scripts": {
@@ -9,16 +9,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mderrick/react-html5video.git"
+    "url": "https://bitbucket.org/aefrontend/react-video"
   },
-  "bugs": {
+  /*"bugs": {
     "url": "https://github.com/mderrick/react-html5video/issues"
-  },
-  "homepage": "https://github.com/mderrick/react-html5video",
+  },*/
+  "homepage": "https://bitbucket.org/aefrontend/react-video",
   "author": {
-    "name": "Matt Derrick",
-    "email": "me@mattderrick.co.uk",
-    "url": "http://mattderrick.co.uk"
+    "name": "iB Hubs",
+    "email": "info@ibhubs.co",
+    "url": "http://ibhubs.co/"
   },
   "license": "MIT",
   "dependencies": {

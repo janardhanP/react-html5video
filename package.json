@@ -11,9 +11,6 @@
     "type": "git",
     "url": "https://bitbucket.org/aefrontend/react-video"
   },
-  /*"bugs": {
-    "url": "https://github.com/mderrick/react-html5video/issues"
-  },*/
   "homepage": "https://bitbucket.org/aefrontend/react-video",
   "author": {
     "name": "iB Hubs",
